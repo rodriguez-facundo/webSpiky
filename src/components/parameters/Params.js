@@ -6,13 +6,16 @@ import WltParams from './wavelets/WltParams';
 import GmmParams from './gmm/GmmParams';
 import BlurParams from './blur/BlurParams';
 import FilterParams from './filter/FilterParams';
-import {Card, CardHeader, CardText} from 'material-ui/Card';
+import RaisedButton from 'material-ui/RaisedButton';
+import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 
 export default class Params extends React.Component {
   
   constructor(props) {
     super(props);
     this.state = {
+      expanded: false,
+      
       order: '',
       rate: '',
       low: '',
@@ -65,6 +68,16 @@ export default class Params extends React.Component {
     this.handleRatioEliminationChange = this.handleRatioEliminationChange.bind(this);
     
     this.handleAlphaChange = this.handleAlphaChange.bind(this);
+    
+  };
+  
+  
+  handleExpandChange = (expanded) => {
+    this.setState({expanded: expanded})
+  };
+
+  handleExpand = () => {
+    this.setState({expanded: true});
   };
   
   handleOrderChange(value) {
@@ -126,23 +139,26 @@ export default class Params extends React.Component {
     this.setState({minDsimultaneous: value});
   };
   handleRatioEliminationChange(value){
-    console.log(value)
     this.setState({ratioElimination: value});
   };
   
   handleAlphaChange(value){
-    this.setState({alpha: value})
+    this.setState({alpha: value});
   };
   
   render () {
     var content = 
-      <Card name='main.card'>
+      <Card name='main.card'
+        expanded={this.state.expanded} 
+        onExpandChange={this.handleExpandChange} 
+      >
         <CardHeader name='main.cardHeader'
           title="Parameters"
           subtitle="Define the required parameters to find and classificate spikes"
           actAsExpander={true}
           showExpandableButton={true}
-        />
+        >
+        </CardHeader>
         <CardText name='main.cardText' expandable={true}>
           <Card name='filter.card'>
             <CardHeader name='filter.card.header'
@@ -229,8 +245,8 @@ export default class Params extends React.Component {
               />
             </CardText>
           </Card>
-          <Card>
-            <CardHeader
+          <Card name='blur.card'>
+            <CardHeader name='blur.cardHeader'
               title="Results blurring"
               subtitle="Define parameters related to result bluring"
               actAsExpander={true}
@@ -245,7 +261,10 @@ export default class Params extends React.Component {
             </CardText>
           </Card>
         </CardText>
-      </Card>
+        <CardActions>
+          <RaisedButton label="Import" onClick={this.handleExpand} />
+        </CardActions>
+      </ Card>
       
     return (
       content

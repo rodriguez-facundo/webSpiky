@@ -1,10 +1,4 @@
-
-const HtmlWebPackPlugin = require("html-webpack-plugin");
-
-const htmlPlugin = new HtmlWebPackPlugin({
-  template: "./src/index.html",
-  filename: "./index.html"
-});
+const webpack = require('webpack')
 
 module.exports = {
   module: {
@@ -12,11 +6,15 @@ module.exports = {
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        use: {
-          loader: "babel-loader"
-        }
+        use: [
+          'babel-loader',
+          'ify-loader',
+          'transform-loader?plotly.js/tasks/util/compress_attributes.js',
+        ]
       }
     ]
   },
-  plugins : [htmlPlugin]
+  plugins : [
+    new webpack.IgnorePlugin(/vertx/)
+  ]
 };

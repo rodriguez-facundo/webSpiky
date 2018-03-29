@@ -1,11 +1,16 @@
 // Main.jsx
-import React from "react";
+import React from 'react';
+
 import Params from './parameters/Params';
+import PlotClusters from './plots/plotClusters'
+import ImportParams from './import/importParams'
+
 import AppBar from 'material-ui/AppBar';
+import SvgIcon from 'material-ui/SvgIcon';
 import Toolbar from 'material-ui/Toolbar';
 import FontIcon from 'material-ui/FontIcon';
-import SvgIcon from 'material-ui/SvgIcon';
 import IconButton from 'material-ui/IconButton';
+
 
 const Icon = (props) => (
     <SvgIcon {...props}>
@@ -20,6 +25,7 @@ export default class Main extends React.Component {
   };
   
   render () {
+    
     var content = 
       <div>
         <AppBar
@@ -29,15 +35,24 @@ export default class Main extends React.Component {
           iconStyleLeft={{marginLeft:5, fontSize:'50px', backgroundColor: '#2196F3', color:'#ffffff'}}
           style={{backgroundColor: '#2196F3'}}
           title='Spiky'
-        >
-        </AppBar>
+        />
         <AppBar 
           name='Subtitle'
           showMenuIconButton={false} 
           style={{backgroundColor: '#00BCD4', height:25}}
         />
+        <br/>
         <Params/>
+        <br/>
+        <ImportParams />
+        <br/>
+        <PlotClusters 
+          values={
+            {'x': [1,2,3,4,5], 'y': [2,3,5,4,1]}
+          }
+        />
       </div>
+      
     return (
       content
     );  
