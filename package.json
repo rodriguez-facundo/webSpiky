@@ -4,7 +4,7 @@
   "description": "Spiky",
   "main": "index.js",
   "scripts": {
-    "start": "webpack --mode development",
+    "start": "webpack --mode development --watch",
     "build": "webpack --mode production"
   },
   "keywords": [],

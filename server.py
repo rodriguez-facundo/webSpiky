@@ -7,6 +7,7 @@ import tornado.options
 import tornado.web
 
 from handlers import JsonHandler
+from handlers import loadParams
 
 from tornado.options import define, options
 define("port", default=8000, help="run on the given port", type=int)
@@ -20,9 +21,15 @@ class ParamsHandler(JsonHandler):
         # Access JSON request body through a dict.
         incoming_args = self.request.arguments
 
-        # Set JSON response body through a dict.
-        self.response = incoming_args 
-
+        # convert from Spiky to webSpiky representation
+        response = loadParams(incoming_args).send()
+        
+        if response:
+            # Set JSON response body through a dict.
+            self.response = response 
+        else:
+            self.write_error(status_code=409, message='check json file')
+        
         # Required at end of method (similar to self.write).
         self.write_json()
 

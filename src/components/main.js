@@ -2,8 +2,7 @@
 import React from 'react';
 
 import Params from './parameters/Params';
-import PlotClusters from './plots/plotClusters'
-import ImportParams from './import/importParams'
+import Plots from './plots/plots';
 
 import AppBar from 'material-ui/AppBar';
 import SvgIcon from 'material-ui/SvgIcon';
@@ -44,13 +43,7 @@ export default class Main extends React.Component {
         <br/>
         <Params/>
         <br/>
-        <ImportParams />
-        <br/>
-        <PlotClusters 
-          values={
-            {'x': [1,2,3,4,5], 'y': [2,3,5,4,1]}
-          }
-        />
+        <Plots/>
       </div>
       
     return (

@@ -10,12 +10,11 @@ class JsonHandler(tornado.web.RequestHandler):
         if self.request.body:
             try:
                 # find json content in string
-                jsonMessage = re.search(r"({.*?})", self.request.body).group(1)
+                jsonMessage = re.search(r"({.+})", self.request.body, re.DOTALL)
                 
                 # convert to dictionary
-                jsonMessage = json_decode(jsonMessage)
+                jsonMessage = json_decode(jsonMessage.group(1))
                 
-                print(jsonMessage['fruta1'])
                 # update arguments
                 self.request.arguments.update(jsonMessage)
                 
@@ -42,3 +41,53 @@ class JsonHandler(tornado.web.RequestHandler):
     def write_json(self):
         output = json_encode(self.response)
         self.write(output)
+
+
+class loadParams():
+    
+    def __init__(self, jsonIn):
+        self.jsonIn = jsonIn
+    
+    def send(self):
+        labels = ['filt', 'spkD', 'spkA', 'spkE', 'wv', 'gmm', 'blur']
+        
+        if all([label in self.jsonIn.keys() for label in labels]):
+            jsonOut = dict()
+            
+            jsonOut['order'] = self.jsonIn['filt']['q']
+            jsonOut['rate']  = self.jsonIn['filt']['hz']
+            jsonOut['low']   = self.jsonIn['filt']['low']
+            jsonOut['high']  = self.jsonIn['filt']['high']
+            
+            jsonOut['threshold'] = self.jsonIn['spkD']['thres']
+            jsonOut['way'] = self.jsonIn['spkD']['way']
+            jsonOut['minD'] = self.jsonIn['spkD']['minD']
+            jsonOut['before'] = self.jsonIn['spkD']['before']
+            jsonOut['after'] = self.jsonIn['spkD']['after']
+            
+            jsonOut['resolution'] = self.jsonIn['spkA']['resol']
+            
+            jsonOut['minDsimultaneous'] = self.jsonIn['spkE']['minD']
+            jsonOut['ratioElimination'] = self.jsonIn['spkE']['lvl']
+            
+            jsonOut['wLvl']  = self.jsonIn['wv']['lvl']
+            jsonOut['wFunc'] = self.jsonIn['wv']['func']
+            jsonOut['wMode'] = self.jsonIn['wv']['mode']
+            
+            jsonOut['gaussians'] = self.jsonIn['gmm']['maxK']
+            jsonOut['features'] = self.jsonIn['gmm']['ftrs']
+            jsonOut['correlation'] = self.jsonIn['gmm']['maxCorr']
+            jsonOut['initializations'] = self.jsonIn['gmm']['inits']
+            
+            jsonOut['alpha'] = self.jsonIn['blur']['alpha']
+            
+            return jsonOut
+        
+        else:
+            return False
+        
+        
+        
+        
+        
+        

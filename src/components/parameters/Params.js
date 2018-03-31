@@ -6,6 +6,8 @@ import WltParams from './wavelets/WltParams';
 import GmmParams from './gmm/GmmParams';
 import BlurParams from './blur/BlurParams';
 import FilterParams from './filter/FilterParams';
+import ImportParams from './import/importParams'
+
 import RaisedButton from 'material-ui/RaisedButton';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 
@@ -69,15 +71,13 @@ export default class Params extends React.Component {
     
     this.handleAlphaChange = this.handleAlphaChange.bind(this);
     
+    this.handleImportParams = this.handleImportParams.bind(this);
+    
   };
   
   
   handleExpandChange = (expanded) => {
     this.setState({expanded: expanded})
-  };
-
-  handleExpand = () => {
-    this.setState({expanded: true});
   };
   
   handleOrderChange(value) {
@@ -146,6 +146,9 @@ export default class Params extends React.Component {
     this.setState({alpha: value});
   };
   
+  handleImportParams(value){
+    this.setState(value)
+  }
   render () {
     var content = 
       <Card name='main.card'
@@ -262,7 +265,8 @@ export default class Params extends React.Component {
           </Card>
         </CardText>
         <CardActions>
-          <RaisedButton label="Import" onClick={this.handleExpand} />
+          <ImportParams 
+            onImportParams={this.handleImportParams}/>
         </CardActions>
       </ Card>
       

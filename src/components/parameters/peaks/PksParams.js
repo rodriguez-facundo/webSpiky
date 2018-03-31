@@ -57,8 +57,8 @@ export default class PksParams extends React.Component {
         hintText="Detect peaks or valleys..."
         floatingLabelText="Peak - Valley"
       >
-        <MenuItem value={1} primaryText="Peak"/>
-        <MenuItem value={2} primaryText="Valley" />
+        <MenuItem value={"peak"} primaryText="peak"/>
+        <MenuItem value={"valley"} primaryText="valley" />
       </SelectField>
       <br />
       <TextField 
