@@ -38,7 +38,7 @@ export default class TopBar extends React.Component {
             name='Title' 
             title='Spiky' 
             showMenuIconButton={false}
-            style={{backgroundColor: '#2196F3', height:60, width:1000, display:'inline-block'}}
+            style={{backgroundColor: '#2196F3', height:60, display:'inline-block'}}
           >
           </AppBar>
         </div>

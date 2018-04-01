@@ -3,6 +3,7 @@ import React from 'react';
 
 import Params from './parameters/Params';
 import Plots from './plots/plots';
+import Run from './run/run'
 
 import AppBar from 'material-ui/AppBar';
 import SvgIcon from 'material-ui/SvgIcon';
@@ -21,8 +22,31 @@ export default class Main extends React.Component {
   
   constructor(props) {
     super(props);
+    this.state = {
+      disablePlots : true,
+      results : {
+        'spikes' : {
+          'x': [[]],
+          'y': [[]]
+        },
+        'clusters': {
+          'x': [[]],
+          'y': [[]],
+          'labels': [],
+        },
+        'confusion':{
+          'x': [],
+          'y': [],
+          'z': [[]],
+        }
+      }
+    };  
+    this.handleReceivedResults = this.handleReceivedResults.bind(this); 
   };
   
+  handleReceivedResults = (value) => {
+    this.setState({results : value, disablePlots: false});
+  }
   render () {
     
     var content = 
@@ -41,9 +65,15 @@ export default class Main extends React.Component {
           style={{backgroundColor: '#00BCD4', height:25}}
         />
         <br/>
-        <Params/>
+        <Plots 
+          data={this.state.results}
+          disable={this.state.disablePlots}
+        />
         <br/>
-        <Plots/>
+        <div>
+          <Params />
+          <Run onReceivedResults={this.handleReceivedResults}/>
+        </div>
       </div>
       
     return (

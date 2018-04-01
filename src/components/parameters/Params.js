@@ -6,7 +6,7 @@ import WltParams from './wavelets/WltParams';
 import GmmParams from './gmm/GmmParams';
 import BlurParams from './blur/BlurParams';
 import FilterParams from './filter/FilterParams';
-import ImportParams from './import/importParams'
+import ImportParams from '../import/importParams'
 
 import RaisedButton from 'material-ui/RaisedButton';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
@@ -152,6 +152,7 @@ export default class Params extends React.Component {
   render () {
     var content = 
       <Card name='main.card'
+        style={{float:'left', width:'49.5%'}}
         expanded={this.state.expanded} 
         onExpandChange={this.handleExpandChange} 
       >

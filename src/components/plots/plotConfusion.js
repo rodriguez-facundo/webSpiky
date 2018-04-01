@@ -11,8 +11,21 @@ export default class PlotConfusion extends React.Component {
   };
   
   render() {
+    var annotations = [];
+    for ( var i = 0 ; i < this.props.values.x.length ; i++ ) {
+      for ( var j = 0 ; j < this.props.values.y.length ; j++ ) {
+        var annotation = {
+          text: this.props.values.z[j][i],
+          showarrow: false,
+          x: i,
+          y: j,
+        };
+        annotations.push(annotation)
+      }
+    };
     
     var layout = {
+      annotations: annotations,
       width: 100*this.props.values.x.length,
       height: 100*this.props.values.y.length,
       plot_bgcolor: '#212121',
@@ -31,6 +44,8 @@ export default class PlotConfusion extends React.Component {
       },
 
     };
+    
+    var data = [];
     var data = [
       {
         z: this.props.values.z,
@@ -41,7 +56,8 @@ export default class PlotConfusion extends React.Component {
         hoverinfo: 'z',
         xgap: 1,
         ygap: 1,
-        opacity: 0.97,
+        opacity: 0.98,
+        showscale: false
       }
     ];
     

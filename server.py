@@ -8,6 +8,8 @@ import tornado.web
 
 from handlers import JsonHandler
 from handlers import loadParams
+from handlers import DataHandler
+from handlers import ToyData
 
 from tornado.options import define, options
 define("port", default=8000, help="run on the given port", type=int)
@@ -33,11 +35,24 @@ class ParamsHandler(JsonHandler):
         # Required at end of method (similar to self.write).
         self.write_json()
 
+class RawDataHandler(DataHandler):
+    def post(self):
+        self.write(self.response)
+        
+class RunAlgorithmHandler(JsonHandler):
+    def post(self):
+        incoming_args = self.request.arguments
+        self.response = ToyData().data
+        self.write_json()
+
+        
 if __name__ == '__main__':
     tornado.options.parse_command_line()
     app = tornado.web.Application( handlers=[
         (r'/', IndexHandler),
-        (r'/uploadParams', ParamsHandler)], 
+        (r'/uploadParams', ParamsHandler),
+        (r'/uploadData', RawDataHandler),
+        (r'/runAlgorithm', RunAlgorithmHandler)], 
         static_path=os.path.join(os.path.dirname(__file__), "dist"),
         template_path=os.path.join(os.path.dirname(__file__), "dist"))
     http_server = tornado.httpserver.HTTPServer(app)
