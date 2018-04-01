@@ -44,6 +44,34 @@ export default class Main extends React.Component {
     this.state = {
       selection: 5,
       disablePlots : true,
+      params: {
+
+        order: '',
+        rate: '',
+        low: '',
+        high: '',
+
+        threshold: '',
+        minD: '',
+        before: '',
+        after: '',
+
+        resolution: '',
+        minDsimultaneous: '',
+        ratioElimination: '',
+
+        wLvl: '',
+        wFunc: '',
+        wMode: '',
+
+        gaussians : '',
+        features: '',
+        correlation: '',
+        initializations: '',
+        
+        alpha: '',
+
+      },
       results : {
         'spikes' : {
           'x': [[]],
@@ -60,8 +88,37 @@ export default class Main extends React.Component {
           'z': [[]],
         }
       },
-    };  
+    };
+    this.handleParamChange = this.handleParamChange.bind(this);
+    this.handleParamWFuncChange = this.handleParamWFuncChange.bind(this);
+    this.handleParamWModeChange = this.handleParamWModeChange.bind(this);
+    this.handleParamWayChange = this.handleParamWayChange.bind(this);
+    this.handleImportParams = this.handleImportParams.bind(this);
     this.handleReceivedResults = this.handleReceivedResults.bind(this);
+  };
+  
+  handleParamChange = (name, value) => {
+    this.setState(prevState => ({
+      params: {...prevState.params, [name]: value}}
+    ))  
+  };
+  handleParamWFuncChange = (value) => {
+    this.setState(prevState => ({
+      params: {...prevState.params, wFunc: value}}
+    ))  
+  };
+  handleParamWModeChange = (value) => {
+    this.setState(prevState => ({
+      params: {...prevState.params, wMode: value}}
+    ))  
+  };
+  handleParamWayChange = (value) => {
+    this.setState(prevState => ({
+      params: {...prevState.params, way: value}}
+    ))  
+  };
+  handleImportParams = (values) => {
+    this.setState({params: values})
   };
   
   select = (index) => {this.setState({selection: index});};
@@ -83,7 +140,15 @@ export default class Main extends React.Component {
     } else if (this.state.selection == 2) {
         var content = <PlotClusters values={this.state.results.clusters}/>
     } else if (this.state.selection == 3) {
-        var content = <Params/>
+        var content = 
+          <Params 
+            params={this.state.params} 
+            onParamChange={this.handleParamChange}
+            onParamWFuncChange={this.handleParamWFuncChange}
+            onParamWModeChange={this.handleParamWModeChange}
+            onParamWayChange={this.handleParamWayChange}
+            onImportParams={this.handleImportParams}
+          />
     } else if (this.state.selection == 4) {
         var content = <Run onReceivedResults={this.handleReceivedResults}/>
     } else {

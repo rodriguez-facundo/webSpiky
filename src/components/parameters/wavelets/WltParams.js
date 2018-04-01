@@ -8,42 +8,35 @@ export default class WltParams extends React.Component {
   
   constructor(props) {
     super(props);
-    this.state = {
-      wLvl : props.values.wLvl,
-      wFunc : props.values.wFunc, 
-      wMode : props.values.wMode,
-    };
-    
-  this.handleWLvlChange = this.handleWLvlChange.bind(this);
-  this.handleWFuncChange = this.handleWFuncChange.bind(this);
-  this.handleWModeChange = this.handleWModeChange.bind(this);
-  
+    this.handleParamChange = this.handleParamChange.bind(this);
+    this.handleParamWFuncChange = this.handleParamWFuncChange.bind(this);
+    this.handleParamWModeChange = this.handleParamWModeChange.bind(this)
   };
   
-  handleWLvlChange(event){
-    this.props.onWLvlChange(event.target.value)
+  handleParamChange(event){
+    this.props.onParamChange(event.target.name, event.target.value)
   };
-  handleWFuncChange(event, index, value){
-    this.props.onWFuncChange(value)
+  handleParamWFuncChange(event, index, value){
+    this.props.onParamWFuncChange(value);
   };
-  handleWModeChange(event, index, value){
-    this.props.onWModeChange(value)
+  handleParamWModeChange(event, index, value){
+    this.props.onParamWModeChange(value);
   };
-  
+
   render () {
     var content = 
     <div>
       <TextField 
-        name='params.wavelet.level'
+        name='wLvl'
         value={this.props.values.wLvl}
-        onChange={this.handleWLvlChange} 
+        onChange={this.handleParamChange} 
         hintText="Wavelet decomposition level"
         floatingLabelText="Decomposition level"
       /><br />
       <SelectField 
-        name='params.wavelet.function'
+        id='wFunc'
         value={this.props.values.wFunc}
-        onChange={this.handleWFuncChange}  
+        onChange={this.handleParamWFuncChange}  
         hintText="Wavelet function"
         floatingLabelText="Select wavelet function"
       >
@@ -55,9 +48,9 @@ export default class WltParams extends React.Component {
       </SelectField>
       <br />
       <SelectField 
-        name='params.wavelet.mode' 
+        id='wMode' 
         value={this.props.values.wMode}
-        onChange={this.handleWModeChange} 
+        onChange={this.handleParamWModeChange} 
         hintText="Spike extension mode"
         floatingLabelText="Extension mode"
       >
@@ -66,7 +59,7 @@ export default class WltParams extends React.Component {
         <MenuItem value={"symmetric"} primaryText="symmetric" />
         <MenuItem value={"periodic"} primaryText="periodic" />
         <MenuItem value={"smooth"} primaryText="smooth" />
-        <MenuItem value={""} primaryText="periodization" />
+        <MenuItem value={"periodization"} primaryText="periodization" />
         <MenuItem value={"periodization"} primaryText="reflect" />
       </SelectField>
       <br />

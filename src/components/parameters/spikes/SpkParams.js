@@ -6,47 +6,33 @@ export default class SpkParams extends React.Component {
   
   constructor(props) {
     super(props);
-    this.state = {
-      resolution: props.values.resolution,
-      minDsimultaneous: props.minDsimultaneous,
-      ratioElimination: props.ratioElimination
-    }
-    this.handleResolutionChange = this.handleResolutionChange.bind(this);
-    this.handleMinDsimultaneousChange = this.handleMinDsimultaneousChange.bind(this);
-    this.handleRatioEliminationChange = this.handleRatioEliminationChange.bind(this);
+    this.handleParamChange = this.handleParamChange.bind(this);
   };
-  
-  handleResolutionChange(event) {
-    this.props.onResolutionChange(event.target.value)
-  }
-  handleMinDsimultaneousChange(event) {
-    this.props.onMinDsimultaneousChange(event.target.value)
-  }
-  handleRatioEliminationChange(event) {
-    this.props.onRatioEliminationChange(event.target.value)
-  }
-  
+  handleParamChange(event) {
+    this.props.onParamChange(event.target.name, event.target.value);
+  };
+
   render () {
     var content = 
     <div>
       <TextField 
-        name='params.spks.resolution'
+        name='resolution'
         value={this.props.values.resolution}
-        onChange={this.handleResolutionChange} 
+        onChange={this.handleParamChange} 
         hintText="Resolution for interpolation"
         floatingLabelText="Resolution for interpolation"
       /><br />
       <TextField 
-        name='params.spks.minDsimultaneous'
+        name='minDsimultaneous'
         value={this.props.values.minDsimultaneous}
-        onChange={this.handleMinDsimultaneousChange} 
+        onChange={this.handleParamChange}
         hintText="Minimum distance"
         floatingLabelText="Min. distance between peaks"
       /><br />
       <TextField 
-        name='params.spks.ratioElimination'
+        name='ratioElimination'
         value={this.props.values.ratioElimination}
-        onChange={this.handleRatioEliminationChange} 
+        onChange={this.handleParamChange}
         hintText="Threshold for elimination"
         floatingLabelText="Threshold for elimination"
       />

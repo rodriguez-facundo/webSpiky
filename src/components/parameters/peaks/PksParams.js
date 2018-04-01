@@ -8,35 +8,16 @@ export default class PksParams extends React.Component {
   
   constructor(props) {
     super(props);
-    this.state = {
-      threshold: props.values.threshold,
-      way: props.values.way,
-      minD: props.values.minD,
-      before: props.values.before,
-      after: props.values.before
-    };
     
-    this.handleThresholdChange = this.handleThresholdChange.bind(this);
-    this.handleWayChange = this.handleWayChange.bind(this);
-    this.handleMinDChange = this.handleMinDChange.bind(this);
-    this.handleBeforeChange = this.handleBeforeChange.bind(this);
-    this.handleAfterChange = this.handleAfterChange.bind(this);
+    this.handleParamChange = this.handleParamChange.bind(this);
+    this.handleParamWayChange = this.handleParamWayChange.bind(this);
   };
   
-  handleThresholdChange(event) {
-    this.props.onThresholdChange(event.target.value);
+  handleParamChange(event) {
+    this.props.onParamChange(event.target.name, event.target.value);
   };
-  handleWayChange(event, index, value) {
-    this.props.onWayChange(value);
-  };
-  handleMinDChange(event) {
-    this.props.onMinDChange(event.target.value);
-  };
-  handleBeforeChange(event) {
-    this.props.onBeforeChange(event.target.value);;
-  };
-  handleAfterChange(event) {
-    this.props.onAfterChange(event.target.value);
+  handleParamWayChange(event, index, value) {
+    this.props.onParamWayChange(value);
   };
   
   render () {
@@ -45,7 +26,7 @@ export default class PksParams extends React.Component {
       <TextField 
         name='threshold'
         value={this.props.values.threshold}
-        onChange={this.handleThresholdChange}
+        onChange={this.handleParamChange}
         hintText="Adjust threshold level..."
         floatingLabelText="Threshold"
       />
@@ -53,7 +34,7 @@ export default class PksParams extends React.Component {
       <SelectField 
         name='way'
         value={this.props.values.way}
-        onChange={this.handleWayChange}
+        onChange={this.handleParamWayChange}
         hintText="Detect peaks or valleys..."
         floatingLabelText="Peak - Valley"
       >
@@ -64,21 +45,21 @@ export default class PksParams extends React.Component {
       <TextField 
         name='minD'
         value={this.props.values.minD}
-        onChange={this.handleMinDChange}
+        onChange={this.handleParamChange}
         hintText="Min. dist. between peaks"
         floatingLabelText="Min. distance between peaks"
       /><br />
       <TextField 
         name='before'
         value={this.props.values.before}
-        onChange={this.handleBeforeChange}
+        onChange={this.handleParamChange}
         hintText="Number of points before peak"
         floatingLabelText="Points collected before peak"
       /><br />
       <TextField 
         name='after'
         value={this.props.values.after}
-        onChange={this.handleAfterChange}
+        onChange={this.handleParamChange}
         hintText="Number of points after peak"
         floatingLabelText="Points collected after peak"
       /><br />

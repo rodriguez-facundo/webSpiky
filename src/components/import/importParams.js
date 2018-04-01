@@ -22,7 +22,7 @@ export default class ImportParams extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      buttonLabel: 'Import',
+      buttonLabel: 'Import Parameters',
       open : false,
       message : 'Nothing Imported'
     };
