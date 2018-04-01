@@ -15,6 +15,11 @@ const styles = {
     marginBottom: 16,
   }
 };
+const style = {
+  float: 'left',
+  display: 'inline-block',
+  margin: '16px 32px 16px 0',
+}
 
 export default class Run extends React.Component {
   
@@ -22,31 +27,36 @@ export default class Run extends React.Component {
     super(props);
     this.state = {
       expanded: false,  
+      batchTime: "",
+      multicore: 1,
       doBatches: true,
       doConfusion: true,
-      do2DPlots: true,
+      doClusters: true,
       data: 'Import',
       run: false
     };
       
     this.updateDoBatches = this.updateDoBatches.bind(this);
     this.updateDoConfusion = this.updateDoConfusion.bind(this);
-    this.updateDo2DPlots = this.updateDo2DPlots.bind(this);
+    this.updateDoClusters = this.updateDoClusters.bind(this);
     this.handleImportData = this.handleImportData.bind(this);
     this.handleRunAlgorithm = this.handleRunAlgorithm.bind(this);
+    this.handleBatchTimeChange = this.handleBatchTimeChange.bind(this);
+    this.handleMultiCoreChange = this.handleMultiCoreChange.bind(this);
   };
   
   handleExpandChange = (expanded) => {
     this.setState({expanded: expanded});
   };
-  updateDoBatches = (event, isCheckBoxChecked) => {
-    this.setState({doBatches: !isCheckBoxChecked});
+  
+  updateDoBatches(event, isCheckBoxChecked){
+    this.setState({doBatches: isCheckBoxChecked});
   };
-  updateDoConfusion = (event, isCheckBoxChecked) => {
-    this.setState({doConfusion: !isCheckBoxChecked});
+  updateDoConfusion(event, isCheckBoxChecked) {
+    this.setState({doConfusion: isCheckBoxChecked});
   };
-  updateDo2DPlots = (event, isCheckBoxChecked) => {
-    this.setState({do2DPlots: !isCheckBoxChecked});
+  updateDoClusters = (event, isCheckBoxChecked) => {
+    this.setState({doClusters: isCheckBoxChecked});
   };
   
   handleImportData(value){
@@ -57,10 +67,16 @@ export default class Run extends React.Component {
     this.props.onReceivedResults(value);
   };
   
+  handleBatchTimeChange = (event) => {
+    this.setState({batchTime: event.target.value})
+  };
+  handleMultiCoreChange = (event) => {
+    this.setState({multiCore: event.target.value})
+  };
+  
   render () {
     var content = 
       <Card name='simulation.card'
-        style={{float:'right', width:'49.5%'}}
         expanded={this.state.expanded} 
         onExpandChange={this.handleExpandChange} 
       >
@@ -73,22 +89,44 @@ export default class Run extends React.Component {
         </CardHeader>
         <CardText name='simulation.cardText' expandable={true}>
           <CheckBox
-            defaultChecked={true}
+            style={style}
+            name='doBatches'
             label="Batches"
+            checked={this.state.doBatches}
             style={styles.radioButton}
             onCheck={this.updateDoBatches}
           />
+          <TextField 
+            style={style}
+            name='run.batchTime'
+            disabled={!this.state.doBatches}
+            value={this.state.batchTime}
+            onChange={this.handleBatchTimeChange}
+            hintText="Batch time [sec]"
+            floatingLabelText="Batch time [sec]"
+          />
+          <TextField 
+            style={style}
+            name='run.multiCore'
+            disabled={!this.state.doBatches}
+            value={this.state.multiCore}
+            onChange={this.handleMultiCoreChange}
+            hintText="Number of Cores"
+            floatingLabelText="Number of Cores"
+          />
           <CheckBox
-            defaultChecked={true}
+            name='doConfusion'
+            checked={this.state.doConfusion}
             label="Confusion Matrix"
             style={styles.radioButton}
             onCheck={this.updateDoConfusion}
           />
           <CheckBox
-            defaultChecked={true}
+            name='doClusters'
+            checked={this.state.doClusters}
             label="Plot 2D Clusters"
             style={styles.radioButton}
-            onCheck={this.updateDo2DPlots}
+            onCheck={this.updateDoClusters}
           />
         <ImportData 
           onImportData={this.handleImportData} 

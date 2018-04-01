@@ -152,7 +152,6 @@ export default class Params extends React.Component {
   render () {
     var content = 
       <Card name='main.card'
-        style={{float:'left', width:'49.5%'}}
         expanded={this.state.expanded} 
         onExpandChange={this.handleExpandChange} 
       >
@@ -182,7 +181,7 @@ export default class Params extends React.Component {
               />
             </CardText>
           </Card>
-          <Card name='peaks.card'>
+          <Card name='peaks.card' >
             <CardHeader name='peaks.cardHeader'
               title="Peak Detection"
               subtitle="Define parameters related to peak detection and spike extraction"
@@ -200,7 +199,7 @@ export default class Params extends React.Component {
               />
             </CardText>
           </Card>
-          <Card name='spike.card'>
+          <Card name='spike.card' >
             <CardHeader name='spike.cardHeader'
               title="Spike Alignment"
               subtitle="Define parameters for elimination in case of simultaneous firings"
@@ -216,7 +215,7 @@ export default class Params extends React.Component {
               />
             </CardText>
           </Card>
-          <Card name='wavelet.card'>
+          <Card name='wavelet.card' >
             <CardHeader name='wavelet.cardHeader'
               title="Wavelet Decomposition"
               subtitle="Define parameters for wavelet decomposition"
@@ -232,7 +231,7 @@ export default class Params extends React.Component {
               />
             </CardText>
           </Card>
-          <Card name='gmm.card'>
+          <Card name='gmm.card'  >
             <CardHeader name='gmm.cardHeader'
               title="Gaussian Mixture Model"
               subtitle="Define parameters related to clustering"
@@ -249,7 +248,7 @@ export default class Params extends React.Component {
               />
             </CardText>
           </Card>
-          <Card name='blur.card'>
+          <Card name='blur.card'  >
             <CardHeader name='blur.cardHeader'
               title="Results blurring"
               subtitle="Define parameters related to result bluring"

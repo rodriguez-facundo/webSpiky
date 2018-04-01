@@ -2,8 +2,27 @@
 import React from 'react';
 
 import Params from './parameters/Params';
-import Plots from './plots/plots';
 import Run from './run/run'
+import PlotSpikes from './plots/plotSpikes';
+import PlotConfusion from './plots/plotConfusion';
+import PlotClusters from './plots/plotClusters';
+
+import Paper from 'material-ui/Paper';
+import {BottomNavigation, BottomNavigationItem} from 'material-ui/BottomNavigation';
+
+import IconRun from 'material-ui/svg-icons/action/touch-app';
+import IconParams    from 'material-ui/svg-icons/action/build';
+import IconSpikes    from 'material-ui/svg-icons/editor/show-chart';
+import IconConfusion from 'material-ui/svg-icons/image/blur-off';
+import IconClusters  from 'material-ui/svg-icons/editor/bubble-chart';
+import IconContract  from 'material-ui/svg-icons/navigation/expand-less';
+
+const RunIcon = <IconRun/>;
+const ParamsIcon    = <IconParams/>;
+const spikesIcon    = <IconSpikes />;
+const confusionIcon = <IconConfusion/>;
+const clusterIcon   = <IconClusters />;
+const expandIcon    = <IconContract />;
 
 import AppBar from 'material-ui/AppBar';
 import SvgIcon from 'material-ui/SvgIcon';
@@ -23,6 +42,7 @@ export default class Main extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      selection: 5,
       disablePlots : true,
       results : {
         'spikes' : {
@@ -39,17 +59,38 @@ export default class Main extends React.Component {
           'y': [],
           'z': [[]],
         }
-      }
+      },
     };  
-    this.handleReceivedResults = this.handleReceivedResults.bind(this); 
+    this.handleReceivedResults = this.handleReceivedResults.bind(this);
+  };
+  
+  select = (index) => {this.setState({selection: index});};
+  selectPlot = (index) => {
+    if (!this.state.disablePlots) {
+      this.setState({selection: index});
+    };
   };
   
   handleReceivedResults = (value) => {
     this.setState({results : value, disablePlots: false});
-  }
-  render () {
+  };
+  
+  render () {   
+    if (this.state.selection==0){
+        var content = <PlotSpikes values={this.state.results.spikes}/>
+    } else if (this.state.selection == 1){
+        var content = <PlotConfusion values={this.state.results.confusion}/>
+    } else if (this.state.selection == 2) {
+        var content = <PlotClusters values={this.state.results.clusters}/>
+    } else if (this.state.selection == 3) {
+        var content = <Params/>
+    } else if (this.state.selection == 4) {
+        var content = <Run onReceivedResults={this.handleReceivedResults}/>
+    } else {
+        var content = <div/>
+    }
     
-    var content = 
+    return (
       <div>
         <AppBar
           name='title_bar'  
@@ -57,27 +98,47 @@ export default class Main extends React.Component {
           iconElementLeft={<IconButton><Icon width='20px' height='20px' viewBox="0 0 512 512"/></IconButton>}
           iconStyleLeft={{marginLeft:5, fontSize:'50px', backgroundColor: '#2196F3', color:'#ffffff'}}
           style={{backgroundColor: '#2196F3'}}
-          title='Spiky'
-        />
+          title='Spiky'/>
         <AppBar 
           name='Subtitle'
           showMenuIconButton={false} 
           style={{backgroundColor: '#00BCD4', height:25}}
-        />
-        <br/>
-        <Plots 
-          data={this.state.results}
-          disable={this.state.disablePlots}
-        />
-        <br/>
-        <div>
-          <Params />
-          <Run onReceivedResults={this.handleReceivedResults}/>
-        </div>
+        /><br/>
+        <Paper zDepth={2}>
+          <BottomNavigation selectedIndex={this.state.selection}>
+            <BottomNavigationItem
+              label="Spikes"
+              icon={spikesIcon}
+              onClick={()=>this.selectPlot(0)}
+            />
+            <BottomNavigationItem
+              label="Confusion"
+              icon={confusionIcon}
+              onClick={()=>this.selectPlot(1)}
+            />
+            <BottomNavigationItem
+              label="Clusters"
+              icon={clusterIcon}
+              onClick={()=>this.selectPlot(2)}
+            />
+            <BottomNavigationItem
+              label="Parameters"
+              icon={ParamsIcon}
+              onClick={()=>this.select(3)}
+            />
+            <BottomNavigationItem
+              label="Run"
+              icon={RunIcon}
+              onClick={()=>this.select(4)}
+            />
+            <BottomNavigationItem
+              icon={expandIcon}
+              onClick={()=>this.select(5)}
+            />
+          </BottomNavigation>
+          {content}
+        </Paper>
       </div>
-      
-    return (
-      content
     );  
   }
 }
