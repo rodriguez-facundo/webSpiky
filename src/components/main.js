@@ -44,6 +44,7 @@ export default class Main extends React.Component {
     this.state = {
       selection: 5,
       disablePlots : true,
+      paramsFileName : 'import parameters',
       params: {
 
         order: '',
@@ -117,8 +118,9 @@ export default class Main extends React.Component {
       params: {...prevState.params, way: value}}
     ))  
   };
-  handleImportParams = (values) => {
-    this.setState({params: values})
+  handleImportParams = (values, fileName) => {
+    this.setState({paramsFileName: fileName});
+    this.setState({params: values});
   };
   
   select = (index) => {this.setState({selection: index});};
@@ -148,6 +150,7 @@ export default class Main extends React.Component {
             onParamWModeChange={this.handleParamWModeChange}
             onParamWayChange={this.handleParamWayChange}
             onImportParams={this.handleImportParams}
+            buttonLabel={this.state.paramsFileName}
           />
     } else if (this.state.selection == 4) {
         var content = <Run onReceivedResults={this.handleReceivedResults}/>

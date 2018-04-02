@@ -22,7 +22,6 @@ export default class ImportParams extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      buttonLabel: 'Import Parameters',
       open : false,
       message : 'Nothing Imported'
     };
@@ -47,9 +46,8 @@ export default class ImportParams extends React.Component {
       body: data,
     }).then((response) => {
       response.json().then((resp) => {
-        this.props.onImportParams(resp);
+        this.props.onImportParams(resp, fileName);
         this.setState({
-          buttonLabel : fileName,
           message : 'Import OK',
           open : true
         })
@@ -60,7 +58,7 @@ export default class ImportParams extends React.Component {
   render() {
     return (
       <RaisedButton 
-        label={this.state.buttonLabel}
+        label={this.props.buttonLabel}
         labelPosition="before"
         style={styles.button}
         containerElement="label"

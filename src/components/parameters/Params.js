@@ -18,16 +18,12 @@ export default class Params extends React.Component {
     this.state = {
       expanded: false,
     };
-    this.handleImportParams = this.handleImportParams.bind(this);
   };
   
   handleExpandChange = (expanded) => {
     this.setState({expanded: expanded});
   };
   
-  handleImportParams(value){
-    this.props.onImportParams(value);
-  };
   render () {
     var content = 
       <Card name='main.card'
@@ -134,7 +130,8 @@ export default class Params extends React.Component {
         </CardText>
         <CardActions>
           <ImportParams 
-            onImportParams={this.handleImportParams}/>
+            onImportParams={this.props.onImportParams}
+            buttonLabel={this.props.buttonLabel}/>
         </CardActions>
       </ Card>
       
