@@ -3,23 +3,30 @@ import React from "react";
 
 import RunAlgorithm from './runAlgorithm'
 import ImportData from '../import/importData'
+import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
 import CheckBox from 'material-ui/Checkbox';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 
 const styles = {
-  block: {
-    maxWidth: 250,
+  block : {
+    'maxWidth': 500,
+  },
+  text: {
+    'maxWidth': 200,
+    'marginLeft': 18,
+    'marginBottom': -10,
+    'marginRight': 18,
+    'marginTop': -10
   },
   radioButton: {
-    marginBottom: 16,
+    'maxWidth': 200,
+    'marginLeft': 18,
+    'marginBottom': 2,
+    'marginRight': 18,
+    'marginTop': 20
   }
 };
-const style = {
-  float: 'left',
-  display: 'inline-block',
-  margin: '16px 32px 16px 0',
-}
 
 export default class Run extends React.Component {
   
@@ -27,51 +34,18 @@ export default class Run extends React.Component {
     super(props);
     this.state = {
       expanded: false,  
-      batchTime: "",
-      multicore: 1,
-      doBatches: true,
-      doConfusion: true,
-      doClusters: true,
-      data: 'Import',
       run: false
     };
-      
-    this.updateDoBatches = this.updateDoBatches.bind(this);
-    this.updateDoConfusion = this.updateDoConfusion.bind(this);
-    this.updateDoClusters = this.updateDoClusters.bind(this);
-    this.handleImportData = this.handleImportData.bind(this);
-    this.handleRunAlgorithm = this.handleRunAlgorithm.bind(this);
-    this.handleBatchTimeChange = this.handleBatchTimeChange.bind(this);
-    this.handleMultiCoreChange = this.handleMultiCoreChange.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    
   };
   
   handleExpandChange = (expanded) => {
     this.setState({expanded: expanded});
   };
   
-  updateDoBatches(event, isCheckBoxChecked){
-    this.setState({doBatches: isCheckBoxChecked});
-  };
-  updateDoConfusion(event, isCheckBoxChecked) {
-    this.setState({doConfusion: isCheckBoxChecked});
-  };
-  updateDoClusters = (event, isCheckBoxChecked) => {
-    this.setState({doClusters: isCheckBoxChecked});
-  };
-  
-  handleImportData(value){
-    this.setState({data: value});
-  };
-  
-  handleRunAlgorithm(value){
-    this.props.onReceivedResults(value);
-  };
-  
-  handleBatchTimeChange = (event) => {
-    this.setState({batchTime: event.target.value})
-  };
-  handleMultiCoreChange = (event) => {
-    this.setState({multiCore: event.target.value})
+  handleChange = (event, value) =>  {
+    this.props.onChange(event.target.name, value);
   };
   
   render () {
@@ -88,52 +62,90 @@ export default class Run extends React.Component {
         >
         </CardHeader>
         <CardText name='simulation.cardText' expandable={true}>
-          <CheckBox
-            style={style}
-            name='doBatches'
-            label="Batches"
-            checked={this.state.doBatches}
-            style={styles.radioButton}
-            onCheck={this.updateDoBatches}
-          />
-          <TextField 
-            style={style}
-            name='run.batchTime'
-            disabled={!this.state.doBatches}
-            value={this.state.batchTime}
-            onChange={this.handleBatchTimeChange}
-            hintText="Batch time [sec]"
-            floatingLabelText="Batch time [sec]"
-          />
-          <TextField 
-            style={style}
-            name='run.multiCore'
-            disabled={!this.state.doBatches}
-            value={this.state.multiCore}
-            onChange={this.handleMultiCoreChange}
-            hintText="Number of Cores"
-            floatingLabelText="Number of Cores"
-          />
+          <div style={styles.block}>
+            <CheckBox
+              name='doBatches'
+              label="Batches"
+              checked={this.props.settings.doBatches}
+              style={styles.radioButton}
+              onCheck={this.handleChange}
+            />
+            <TextField 
+              name='batchTime'
+              type='number'
+              disabled={!this.props.settings.doBatches}
+              value={this.props.settings.batchTime}
+              onChange={this.handleChange}
+              hintText="Batch time [sec]"
+              floatingLabelText="Batch time [sec]"
+              style={styles.text}
+            />
+            <TextField 
+              name='cores'
+              type='number'
+              disabled={!this.props.settings.doBatches}
+              value={this.props.settings.cores}
+              onChange={this.handleChange}
+              hintText="Number of Cores"
+              floatingLabelText="Number of Cores"
+              style={styles.text}
+            />
+            <CheckBox
+              name='doDownSampling'
+              label="down sampling signal"
+              checked={this.props.settings.doDownSampling}
+              style={styles.radioButton}
+              onCheck={this.handleChange}
+            />
+            <TextField 
+              name='downSamplingFactor'
+              type='number'
+              disabled={!this.props.settings.doDownSampling}
+              value={this.props.settings.downSamplingFactor}
+              onChange={this.handleChange}
+              hintText="Down Sampling Factor"
+              floatingLabelText="Down Sampling Factor"
+              style={styles.text}
+            />
+            <CheckBox
+              name='doMultiElectrodes'
+              label="multi-electrodes"
+              checked={this.props.settings.doMultiElectrodes}
+              style={styles.radioButton}
+              onCheck={this.handleChange}
+            />
+            <TextField 
+              name='numberOfElectrodes'
+              type='number'
+              disabled={!this.props.settings.doMultiElectrodes}
+              value={this.props.settings.numberOfElectrodes}
+              onChange={this.handleChange}
+              hintText="number of electrodes"
+              floatingLabelText="number of electrodes"
+              style={styles.text}
+            />
           <CheckBox
             name='doConfusion'
-            checked={this.state.doConfusion}
+            checked={this.props.settings.doConfusion}
             label="Confusion Matrix"
             style={styles.radioButton}
-            onCheck={this.updateDoConfusion}
+            onCheck={this.handleChange}
           />
           <CheckBox
             name='doClusters'
-            checked={this.state.doClusters}
+            checked={this.props.settings.doClusters}
             label="Plot 2D Clusters"
             style={styles.radioButton}
-            onCheck={this.updateDoClusters}
+            onCheck={this.handleChange}
           />
+        </div><br/>
+        <br/>
         <ImportData 
-          onImportData={this.handleImportData} 
-          label = {this.state.data}/>
+          onImportRawData={this.props.onChange} 
+          buttonLabel={this.props.settings.rawDataFileName}/>
         </CardText>
         <CardActions>
-          <RunAlgorithm onRunAlgorithm={this.handleRunAlgorithm}/>
+          <RunAlgorithm onRunAlgorithm={this.props.onReceivedResults}/>
         </CardActions>
       </Card>
       

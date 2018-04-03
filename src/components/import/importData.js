@@ -22,7 +22,6 @@ export default class ImportData extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      buttonLabel: this.props.label,
       open : false,
       message : 'Nothing Imported'
     };
@@ -44,10 +43,10 @@ export default class ImportData extends React.Component {
       body: event.target.files[0],
     }).then((response) => {
       if (response.status=="200"){
-        this.props.onImportData(fileName);
+        console.log(fileName, '1')
+        this.props.onImportRawData('rawDataFileName', fileName);
         this.setState({
           message : 'Import OK',
-          buttonLabel : fileName
         });
       }
       else {
@@ -61,7 +60,7 @@ export default class ImportData extends React.Component {
   render() {
     return (
       <RaisedButton 
-        label={this.state.buttonLabel}
+        label={this.props.buttonLabel}
         labelPosition="before"
         style={styles.button}
         containerElement="label"

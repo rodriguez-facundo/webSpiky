@@ -45,33 +45,39 @@ export default class Main extends React.Component {
       selection: 5,
       disablePlots : true,
       paramsFileName : 'import parameters',
+      settings : {
+        rawDataFileName : 'import raw data',
+        doBatches : true,
+        batchTime : 30,
+        cores : 1, 
+        doConfusion : true,
+        doClusters : true,
+        doDownSampling : false,
+        downSamplingFactor: 1,
+        doMultiElectrodes: false,
+        numberOfElectrodes: 1,
+        electrodes : 1
+      },
       params: {
-
         order: '',
         rate: '',
         low: '',
         high: '',
-
         threshold: '',
         minD: '',
         before: '',
         after: '',
-
         resolution: '',
         minDsimultaneous: '',
         ratioElimination: '',
-
         wLvl: '',
         wFunc: '',
         wMode: '',
-
         gaussians : '',
         features: '',
         correlation: '',
         initializations: '',
-        
         alpha: '',
-
       },
       results : {
         'spikes' : {
@@ -90,12 +96,15 @@ export default class Main extends React.Component {
         }
       },
     };
+    
     this.handleParamChange = this.handleParamChange.bind(this);
     this.handleParamWFuncChange = this.handleParamWFuncChange.bind(this);
     this.handleParamWModeChange = this.handleParamWModeChange.bind(this);
     this.handleParamWayChange = this.handleParamWayChange.bind(this);
     this.handleImportParams = this.handleImportParams.bind(this);
     this.handleReceivedResults = this.handleReceivedResults.bind(this);
+    this.handleImportRawDataFileName = this.handleImportRawDataFileName.bind(this);
+    this.handleSettingsChange = this.handleSettingsChange.bind(this);
   };
   
   handleParamChange = (name, value) => {
@@ -134,6 +143,16 @@ export default class Main extends React.Component {
     this.setState({results : value, disablePlots: false});
   };
   
+  handleImportRawDataFileName = (value) => {
+    this.setState({rawDataFileName : value})
+  };
+  
+  handleSettingsChange = (name, value) => {
+    this.setState(prevState => ({
+      settings: {...prevState.settings, [name]: value}}
+    ));    
+  };
+  
   render () {   
     if (this.state.selection==0){
         var content = <PlotSpikes values={this.state.results.spikes}/>
@@ -153,7 +172,11 @@ export default class Main extends React.Component {
             buttonLabel={this.state.paramsFileName}
           />
     } else if (this.state.selection == 4) {
-        var content = <Run onReceivedResults={this.handleReceivedResults}/>
+        var content = 
+            <Run 
+              onReceivedResults={this.handleReceivedResults}
+              settings={this.state.settings}
+              onChange={this.handleSettingsChange}/>
     } else {
         var content = <div/>
     }

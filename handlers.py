@@ -9,8 +9,11 @@ class JsonHandler(tornado.web.RequestHandler):
         # Incorporate request JSON into arguments dictionary.
         if self.request.body:
             try:
+                # from binary to string
+                jsonMessage = self.request.body.decode('utf-8')
+                
                 # find json content in string
-                jsonMessage = re.search(r"({.+})", self.request.body, re.DOTALL)
+                jsonMessage = re.search(r"({.+})", jsonMessage, re.DOTALL)
                 
                 # convert to dictionary
                 jsonMessage = json_decode(jsonMessage.group(1))
@@ -48,10 +51,7 @@ class DataHandler(tornado.web.RequestHandler):
         # Incorporate request JSON into arguments dictionary.
         if self.request.body:
             try:
-                print(self.request.body)
-                print(self.request)
-                print(self.request.headers)
-                
+                pass
             except ValueError:
                 message = 'Unable to parse JSON'
                 self.send_error(400, message=message) # Bad Request
