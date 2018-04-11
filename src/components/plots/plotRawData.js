@@ -60,14 +60,16 @@ export default class PlotRawData extends React.Component {
         steps: sliderSteps
       }],
     };
-    var x = Array(this.props.values.length)
-    for (var i=0; i<this.props.values.length; i++){
-      x[i] = i/this.props.step
+    var x = Array(50000)
+    var y = Array(50000)
+    for (var i=0; i<50000; i++){
+      x[i] = i/this.props.step;
+      y[i] = this.props.values[i];
     }
     console.log(this.props.values)
     var data = [{
       x: x,
-      y: this.props.values,
+      y: y,
       mode: 'lines',
       line: style.line,
       hoverinfo: 'none',

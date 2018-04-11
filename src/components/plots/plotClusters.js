@@ -25,6 +25,7 @@ export default class PlotClusters extends React.Component {
 
   render() {
     var layout = {
+      width: 400,
       xaxis: {
         title: 'Direction '+this.props.values.directions[0],
         showgrid: false,
