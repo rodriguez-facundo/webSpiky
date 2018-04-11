@@ -66,7 +66,9 @@ export default class PlotConfusion extends React.Component {
     ];
 
     return (
-      <Plot calssName='plot.confusion' data={data} layout={layout}/>
+      <div align="center">
+        <Plot calssName='plot.confusion' data={data} layout={layout}/>
+      </div>
     );
   };
 };

@@ -76,7 +76,9 @@ export default class PlotRawData extends React.Component {
     }];
 
     return (
-      <Plot calssName='plot.rawData' data={data} layout={layout}/>
+      <div align="center">
+        <Plot calssName='plot.rawData' data={data} layout={layout}/>
+      </div>
     );
   };
 };

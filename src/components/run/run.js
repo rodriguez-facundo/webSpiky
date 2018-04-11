@@ -12,19 +12,28 @@ const styles = {
   block : {
     'maxWidth': 500,
   },
+  paper : {
+    'marginTop': 20,
+    'maxWidth': 700
+  },
   text: {
     'maxWidth': 200,
     'marginLeft': 18,
-    'marginBottom': -10,
-    'marginRight': 18,
-    'marginTop': -10
+    'marginBottom': 10,
+    'marginRight': 10,
+    'marginTop': 10
   },
   radioButton: {
+    'float': 'left',
     'maxWidth': 200,
-    'marginLeft': 18,
-    'marginBottom': 2,
-    'marginRight': 18,
-    'marginTop': 20
+    'marginTop': 45,
+    'marginLeft': 20
+  },
+  radioButton1: {
+    'maxWidth': 200,
+    'marginTop': 45,
+    'marginBottom': 50,
+    'marginLeft': 20
   }
 };
 
@@ -62,14 +71,14 @@ export default class Run extends React.Component {
         >
         </CardHeader>
         <CardText name='simulation.cardText' expandable={true}>
-          <div style={styles.block}>
-            <CheckBox
-              name='doBatches'
-              label="Batches"
-              checked={this.props.settings.doBatches}
-              style={styles.radioButton}
-              onCheck={this.handleChange}
-            />
+          <CheckBox
+            name='doBatches'
+            label="Batches"
+            checked={this.props.settings.doBatches}
+            style={styles.radioButton}
+            onCheck={this.handleChange}
+          />
+          <div align='left'>
             <TextField
               name='batchTime'
               type='number'
@@ -90,13 +99,15 @@ export default class Run extends React.Component {
               floatingLabelText="Number of Cores"
               style={styles.text}
             />
-            <CheckBox
-              name='doDownSampling'
-              label="down sampling signal"
-              checked={this.props.settings.doDownSampling}
-              style={styles.radioButton}
-              onCheck={this.handleChange}
-            />
+          </div>
+          <CheckBox
+            name='doDownSampling'
+            label="down sampling signal"
+            checked={this.props.settings.doDownSampling}
+            style={styles.radioButton}
+            onCheck={this.handleChange}
+          />
+          <div align='left'>  
             <TextField
               name='downSamplingFactor'
               type='number'
@@ -107,13 +118,15 @@ export default class Run extends React.Component {
               floatingLabelText="Down Sampling Factor"
               style={styles.text}
             />
-            <CheckBox
-              name='doMultiElectrodes'
-              label="multi-electrodes"
-              checked={this.props.settings.doMultiElectrodes}
-              style={styles.radioButton}
-              onCheck={this.handleChange}
-            />
+          </div>
+          <CheckBox
+            name='doMultiElectrodes'
+            label="multi-electrodes"
+            checked={this.props.settings.doMultiElectrodes}
+            style={styles.radioButton}
+            onCheck={this.handleChange}
+          />
+          <div align='left'>
             <TextField
               name='numberOfElectrodes'
               type='number'
@@ -124,25 +137,26 @@ export default class Run extends React.Component {
               floatingLabelText="number of electrodes"
               style={styles.text}
             />
+          </div>
           <CheckBox
             name='doConfusion'
             checked={this.props.settings.doConfusion}
             label="Confusion Matrix"
-            style={styles.radioButton}
+            style={styles.radioButton1}
             onCheck={this.handleChange}
           />
           <CheckBox
             name='doClusters'
             checked={this.props.settings.doClusters}
             label="Plot 2D Clusters"
-            style={styles.radioButton}
+            style={styles.radioButton1}
             onCheck={this.handleChange}
           />
-        </div><br/>
-        <br/>
-        <ImportData
-          onImport={this.props.onImportRawData}
-          buttonLabel={this.props.buttonLabel}/>
+          <ImportData
+            onImport={this.props.onImportRawData}
+            buttonLabel={this.props.buttonLabel}
+            style={styles.radioButton1}
+          />
         </CardText>
         <CardActions>
           <RunAlgorithm

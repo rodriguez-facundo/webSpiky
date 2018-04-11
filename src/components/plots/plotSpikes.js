@@ -21,7 +21,7 @@ export default class PlotSpikes extends React.Component {
   render() {
     var layout = {
       title: 'Label '+this.props.title,
-      width: 400,
+      width: 600,
       plot_bgcolor: '#FDFDFD',
       showlegend: false,
       xaxis: {showgrid: false, zeroline: false, showline:true, mirror: true},

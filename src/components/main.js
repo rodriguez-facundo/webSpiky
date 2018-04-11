@@ -167,22 +167,23 @@ export default class Main extends React.Component {
 
   render () {
     if (this.state.selection==0){
-        var content = [];
-        for (var i=0;i<this.state.results.spikes.y.length;i++){
-          content.push(
-            <PlotSpikes
-              key={i}
-              values={this.state.results.spikes.y[i]}
-              title={this.state.results.spikes.labels[i]}
-            />
-          )
-        }
+      var plots = [];
+      for (var i=0;i<this.state.results.spikes.y.length;i++){
+        plots.push(
+          <PlotSpikes
+            key={i}
+            values={this.state.results.spikes.y[i]}
+            title={this.state.results.spikes.labels[i]}
+          />
+        )
+      }
+      var content = <div align='center'>{plots}</div>  
     } else if (this.state.selection == 1){
         var content = <PlotConfusion values={this.state.results.confusion}/>
     } else if (this.state.selection == 2) {
-        var content = [];
+        var plots = [];
         for (var i=0;i<this.state.results.clusters.x.length;i++){
-          content.push(<PlotClusters
+          plots.push(<PlotClusters
             key={i}
             values={{
               'x':this.state.results.clusters.x[i],
@@ -192,6 +193,7 @@ export default class Main extends React.Component {
             }}
           />)
         }
+        var content = <div align='center'>{plots}</div>
     } else if (this.state.selection == 3) {
         var content =
           <Params
