@@ -36,6 +36,7 @@ export default class RunAlgorithm extends React.Component {
   };
 
   handleClick = (event) => {
+    this.props.waitBar(true);
     event.preventDefault();
 
     const data = new FormData();
@@ -52,13 +53,13 @@ export default class RunAlgorithm extends React.Component {
     }).then((response) => {
       if (response.status=="200") {
         response.json().then((resp) => {
-          console.log(resp)
           this.props.onRunAlgorithm(resp);
           this.setState({
             buttonLabel : 'Done',
             message : 'DONE!',
             open : true
           })
+          this.props.waitBar(false);
         })
       }
       else {

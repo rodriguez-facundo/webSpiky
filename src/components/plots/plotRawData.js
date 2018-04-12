@@ -66,7 +66,6 @@ export default class PlotRawData extends React.Component {
       x[i] = i/this.props.step;
       y[i] = this.props.values[i];
     }
-    console.log(this.props.values)
     var data = [{
       x: x,
       y: y,

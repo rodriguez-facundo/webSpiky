@@ -129,9 +129,12 @@ export default class Params extends React.Component {
           </Card>
         </CardText>
         <CardActions>
-          <ImportParams 
-            onImportParams={this.props.onImportParams}
-            buttonLabel={this.props.buttonLabel}/>
+          <div align='center'>
+            <ImportParams 
+              onImportParams={this.props.onImportParams}
+              buttonLabel={this.props.buttonLabel}
+              />
+          </div>  
         </CardActions>
       </ Card>
       

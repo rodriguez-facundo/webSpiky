@@ -11,14 +11,11 @@ export default class PlotConfusion extends React.Component {
   };
 
   render() {
-    console.log(this.props.values.x)
-    console.log(this.props.values.y)
     var annotations = [];
     var Nx = this.props.values.x.length;
     var Ny = this.props.values.y.length
     for ( var i = 0 ; i < Ny ; i++ ) {
       for ( var j = 0 ; j < Nx ; j++ ) {
-        console.log(this.props.values.z[i][j]);
         var annotation = {
           text: this.props.values.z[i][j],
           showarrow: false,

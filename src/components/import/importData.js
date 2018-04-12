@@ -35,6 +35,7 @@ export default class ImportData extends React.Component {
   };
 
   onFormSubmit(event) {
+    this.props.waitBar(true);
     event.preventDefault();
     var fileName = event.target.files[0].name
 
@@ -48,7 +49,8 @@ export default class ImportData extends React.Component {
           this.setState({
             message : 'Import OK',
             open: true
-          })
+          });
+          this.props.waitBar(false);
         })
       } else {
           this.props.onImport('Error')
