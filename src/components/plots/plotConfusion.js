@@ -26,12 +26,7 @@ export default class PlotConfusion extends React.Component {
         annotations.push(annotation)
       }
     };
-    console.log(this.props.values.z);
-    console.log(this.props.values.x);
-    console.log(this.props.values.y);
-    console.log(this.props.values.x.length);
-    console.log(this.props.values.y.length);
-
+    
     var layout = {
       annotations: annotations,
       width: 100*this.props.values.x.length,

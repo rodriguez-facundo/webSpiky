@@ -71,9 +71,7 @@ class RunAlgorithmHandler(JsonHandler):
         a = [x[:,0].tolist() for x in spk.X]
 
         spk.blur(False)
-        print(spk.confusion)
-        print(spk.l1)
-        print(spk.l2)
+
         # construct response
         self.response = {
             'spikes': {
