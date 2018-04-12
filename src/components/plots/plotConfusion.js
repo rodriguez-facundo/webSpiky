@@ -5,17 +5,20 @@ import createPlotlyComponent from 'react-plotly.js/factory';
 const Plot = createPlotlyComponent(Plotly);
 
 export default class PlotConfusion extends React.Component {
-  
+
   constructor(props) {
     super(props)
   };
-  
+
   render() {
     var annotations = [];
-    for ( var i = 0 ; i < this.props.values.x.length ; i++ ) {
-      for ( var j = 0 ; j < this.props.values.y.length ; j++ ) {
+    var Nx = this.props.values.x.length;
+    var Ny = this.props.values.y.length
+    for ( var i = 0 ; i < Nx ; i++ ) {
+      for ( var j = 0 ; j < Ny ; j++ ) {
+        console.log(i, j)
         var annotation = {
-          text: this.props.values.z[j][i],
+          text: this.props.values.z[i][j],
           showarrow: false,
           x: i,
           y: j,
@@ -23,7 +26,12 @@ export default class PlotConfusion extends React.Component {
         annotations.push(annotation)
       }
     };
-    
+    console.log(this.props.values.z);
+    console.log(this.props.values.x);
+    console.log(this.props.values.y);
+    console.log(this.props.values.x.length);
+    console.log(this.props.values.y.length);
+
     var layout = {
       annotations: annotations,
       width: 100*this.props.values.x.length,
@@ -33,19 +41,18 @@ export default class PlotConfusion extends React.Component {
         side: 'top',
         title: 'Original Data',
         showgrid: false,
-        showline: true, 
+        showline: true,
         mirror: false
       },
       yaxis: {
-        title: 'Blurred Data',
+        title: 'Blur Data',
         showgrid: false,
-        showline: true, 
+        showline: true,
         mirror: false
       },
 
     };
-    
-    var data = [];
+
     var data = [
       {
         z: this.props.values.z,
@@ -60,7 +67,7 @@ export default class PlotConfusion extends React.Component {
         showscale: false
       }
     ];
-    
+
     return (
       <Plot calssName='plot.confusion' data={data} layout={layout}/>
     );

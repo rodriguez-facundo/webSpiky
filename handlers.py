@@ -1,7 +1,9 @@
 import re
+import numpy as np
 import tornado.web
 from tornado.escape import json_decode
 from tornado.escape import json_encode
+from struct import unpack
 
 class JsonHandler(tornado.web.RequestHandler):
     """Request handler where requests and responses speak JSON."""
@@ -11,16 +13,16 @@ class JsonHandler(tornado.web.RequestHandler):
             try:
                 # from binary to string
                 jsonMessage = self.request.body.decode('utf-8')
-                
+
                 # find json content in string
                 jsonMessage = re.search(r"({.+})", jsonMessage, re.DOTALL)
-                
+
                 # convert to dictionary
                 jsonMessage = json_decode(jsonMessage.group(1))
-                
+
                 # update arguments
                 self.request.arguments.update(jsonMessage)
-                
+
             except ValueError:
                 message = 'Unable to parse JSON'
                 self.send_error(400, message=message) # Bad Request
@@ -51,13 +53,17 @@ class DataHandler(tornado.web.RequestHandler):
         # Incorporate request JSON into arguments dictionary.
         if self.request.body:
             try:
-                pass
+                Size = (len(self.request.body)-1)//2
+                data = [self.request.body[i*2:(i+1)*2] for i in range(Size)]
+                data = [int.from_bytes(bytes, signed=True, byteorder='little')
+                            for bytes in data]
+
+                # Set up response dictionary.
+                self.response = {'x': data}
+
             except ValueError:
                 message = 'Unable to parse JSON'
-                self.send_error(400, message=message) # Bad Request
-
-        # Set up response dictionary.
-        self.response = {'yep': 'OK'}
+                self.send_error(400, message=message)
 
     def set_default_headers(self):
         self.set_header('Content-Type', 'application/json')
@@ -71,54 +77,102 @@ class DataHandler(tornado.web.RequestHandler):
 
         self.response = kwargs
         self.write_json()
-    
+
     def write_json(self):
         output = json_encode(self.response)
         self.write(output)
 
-class loadParams():
-    
+class back2frontParams():
+
     def __init__(self, jsonIn):
         self.jsonIn = jsonIn
-    
+
     def send(self):
         labels = ['filt', 'spkD', 'spkA', 'spkE', 'wv', 'gmm', 'blur']
-        
+
         if all([label in self.jsonIn.keys() for label in labels]):
             jsonOut = dict()
-            
+
             jsonOut['order'] = self.jsonIn['filt']['q']
             jsonOut['rate']  = self.jsonIn['filt']['hz']
             jsonOut['low']   = self.jsonIn['filt']['low']
             jsonOut['high']  = self.jsonIn['filt']['high']
-            
+
             jsonOut['threshold'] = self.jsonIn['spkD']['thres']
             jsonOut['way'] = self.jsonIn['spkD']['way']
             jsonOut['minD'] = self.jsonIn['spkD']['minD']
             jsonOut['before'] = self.jsonIn['spkD']['before']
             jsonOut['after'] = self.jsonIn['spkD']['after']
-            
+
             jsonOut['resolution'] = self.jsonIn['spkA']['resol']
-            
+
             jsonOut['minDsimultaneous'] = self.jsonIn['spkE']['minD']
             jsonOut['ratioElimination'] = self.jsonIn['spkE']['lvl']
-            
+
             jsonOut['wLvl']  = self.jsonIn['wv']['lvl']
             jsonOut['wFunc'] = self.jsonIn['wv']['func']
             jsonOut['wMode'] = self.jsonIn['wv']['mode']
-            
+
             jsonOut['gaussians'] = self.jsonIn['gmm']['maxK']
             jsonOut['features'] = self.jsonIn['gmm']['ftrs']
             jsonOut['correlation'] = self.jsonIn['gmm']['maxCorr']
             jsonOut['initializations'] = self.jsonIn['gmm']['inits']
-            
+
             jsonOut['alpha'] = self.jsonIn['blur']['alpha']
-            
+
             return jsonOut
-        
+
         else:
             return False
-        
+
+class front2backParams():
+
+    def __init__(self, jsonIn):
+        self.jsonIn = jsonIn
+
+    def send(self):
+        labels = [
+            'order', 'rate', 'low', 'high', 'threshold', 'way', 'minD',
+            'before', 'after', 'resolution', 'minDsimultaneous',
+            'ratioElimination', 'wLvl', 'wFunc', 'wMode', 'gaussians',
+            'features', 'correlation', 'initializations', 'alpha'
+        ]
+
+        if all([label in self.jsonIn.keys() for label in labels]):
+            jsonOut = dict()
+
+            jsonOut['filt'] = {'q':self.jsonIn['order']}
+            jsonOut['filt']['hz'] = self.jsonIn['rate']
+            jsonOut['filt']['low'] = self.jsonIn['low']
+            jsonOut['filt']['high'] = self.jsonIn['high']
+
+            jsonOut['spkD'] = {'thres': self.jsonIn['threshold']}
+            jsonOut['spkD']['way'] = self.jsonIn['way']
+            jsonOut['spkD']['minD'] = self.jsonIn['minD']
+            jsonOut['spkD']['before'] = self.jsonIn['before']
+            jsonOut['spkD']['after'] = self.jsonIn['after']
+
+            jsonOut['spkA'] = {'resol': self.jsonIn ['resolution']}
+
+            jsonOut['spkE'] = {'minD': self.jsonIn['minDsimultaneous']}
+            jsonOut['spkE']['lvl'] = self.jsonIn['ratioElimination']
+
+            jsonOut['wv'] = {'lvl': self.jsonIn['wLvl']}
+            jsonOut['wv']['func'] = self.jsonIn['wFunc']
+            jsonOut['wv']['mode'] = self.jsonIn['wMode']
+
+            jsonOut['gmm'] = {'maxK': self.jsonIn['gaussians']}
+            jsonOut['gmm']['ftrs']= self.jsonIn['features']
+            jsonOut['gmm']['maxCorr'] = self.jsonIn['correlation']
+            jsonOut['gmm']['inits'] = self.jsonIn['initializations']
+
+            jsonOut['blur'] = {'alpha': self.jsonIn['alpha']}
+
+            return jsonOut
+
+        else:
+            return None
+
 class ToyData():
     def __init__(self):
         self.SpkX = [
@@ -135,14 +189,14 @@ class ToyData():
         ]
 
         self.ConfZ = [
-            [2,1,0,0,8], 
-            [2,1,0,6,1], 
-            [1,0,6,0,2], 
-            [2,6,3,0,0], 
+            [2,1,0,0,8],
+            [2,1,0,6,1],
+            [1,0,6,0,2],
+            [2,6,3,0,0],
             [9,2,0,1,0]
-            ] 
-            
-        self.ConfX = ['A', 'B', 'C','D', 'E'] 
+            ]
+
+        self.ConfX = ['A', 'B', 'C','D', 'E']
         self.ConfY = ['D', 'B', 'A','C', 'E']
 
         self.ClusX = [
@@ -175,11 +229,11 @@ class ToyData():
         ]
 
         self.ClusL = [0, 1, 2]
-        
+
         self.data = {
             'spikes': {
                 'x': self.SpkX,
-                'y': self.SpkY, 
+                'y': self.SpkY,
             },
             'confusion':{
                 'z': self.ConfZ,
@@ -190,9 +244,5 @@ class ToyData():
                 'x': self.ClusX,
                 'y': self.ClusY,
                 'labels': self.ClusL
-            }    
+            }
         }
-        
-        
-        
-        

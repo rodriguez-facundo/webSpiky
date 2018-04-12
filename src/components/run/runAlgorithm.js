@@ -26,21 +26,26 @@ export default class RunAlgorithm extends React.Component {
       open : false,
       message : 'Nothing Running'
     };
-    
+
     this.handleRequestClose = this.handleRequestClose.bind(this);
     this.handleClick = this.handleClick.bind(this);
   }
-  
+
   handleRequestClose = () => {
     this.setState({open : false})
   };
-  
+
   handleClick = (event) => {
     event.preventDefault();
-    
+
     const data = new FormData();
-    data.append('data', '{"AAA": 23}');
-    
+    const content = {
+      'params': this.props.params,
+      'settings': this.props.settings,
+      'rawData': this.props.rawSignal
+    }
+    data.append('data', JSON.stringify(content));
+
     fetch('http://localhost:8887/runAlgorithm', {
       method: 'POST',
       body: data,
@@ -68,7 +73,7 @@ export default class RunAlgorithm extends React.Component {
 
   render() {
     return (
-      <RaisedButton 
+      <RaisedButton
         label={this.state.buttonLabel}
         labelPosition="before"
         style={styles.button}

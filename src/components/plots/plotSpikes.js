@@ -12,26 +12,30 @@ var style = {
   },
 };
 
-var layout = {
-  plot_bgcolor: '#FDFDFD',
-  showlegend: false,
-  xaxis: {showgrid: false, zeroline: false, showline:true, mirror: true},
-  yaxis: {showgrid: false, zeroline: false, showline:true, mirror: true},
-};
-
 export default class PlotSpikes extends React.Component {
-  
+
   constructor(props) {
     super(props)
   };
-  
-  render() {
 
+  render() {
+    var layout = {
+      title: 'Label '+this.props.title,
+      plot_bgcolor: '#FDFDFD',
+      showlegend: false,
+      xaxis: {showgrid: false, zeroline: false, showline:true, mirror: true},
+      yaxis: {showgrid: false, zeroline: false, showline:true, mirror: true},
+    };
+
+    var x = Array(this.props.values[0].length)
+    for (var i=0;i<this.props.values[0].length;i++) {
+      x[i] = i;
+    };
     var data = [];
-    for ( var i = 0 ; i < this.props.values.x.length ; i++ ) {
+    for ( var i = 0 ; i < this.props.values.length ; i++ ) {
       var result = {
-        x: this.props.values.x[i],
-        y: this.props.values.y[i],
+        x: x,
+        y: this.props.values[i],
         type: 'scatter',
         mode: 'lines',
         line: style.line,
@@ -39,7 +43,7 @@ export default class PlotSpikes extends React.Component {
       };
       data.push(result);
     };
-    
+
     return (
       <Plot calssName='plot.spikes' data={data} layout={layout} />
     );

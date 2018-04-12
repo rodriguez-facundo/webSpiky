@@ -29,30 +29,30 @@ const styles = {
 };
 
 export default class Run extends React.Component {
-  
+
   constructor(props) {
     super(props);
     this.state = {
-      expanded: false,  
+      expanded: false,
       run: false
     };
     this.handleChange = this.handleChange.bind(this);
-    
+
   };
-  
+
   handleExpandChange = (expanded) => {
     this.setState({expanded: expanded});
   };
-  
+
   handleChange = (event, value) =>  {
     this.props.onChange(event.target.name, value);
   };
-  
+
   render () {
-    var content = 
+    var content =
       <Card name='simulation.card'
-        expanded={this.state.expanded} 
-        onExpandChange={this.handleExpandChange} 
+        expanded={this.state.expanded}
+        onExpandChange={this.handleExpandChange}
       >
         <CardHeader name='simulation.cardHeader'
           title="Run"
@@ -70,7 +70,7 @@ export default class Run extends React.Component {
               style={styles.radioButton}
               onCheck={this.handleChange}
             />
-            <TextField 
+            <TextField
               name='batchTime'
               type='number'
               disabled={!this.props.settings.doBatches}
@@ -80,7 +80,7 @@ export default class Run extends React.Component {
               floatingLabelText="Batch time [sec]"
               style={styles.text}
             />
-            <TextField 
+            <TextField
               name='cores'
               type='number'
               disabled={!this.props.settings.doBatches}
@@ -97,7 +97,7 @@ export default class Run extends React.Component {
               style={styles.radioButton}
               onCheck={this.handleChange}
             />
-            <TextField 
+            <TextField
               name='downSamplingFactor'
               type='number'
               disabled={!this.props.settings.doDownSampling}
@@ -114,7 +114,7 @@ export default class Run extends React.Component {
               style={styles.radioButton}
               onCheck={this.handleChange}
             />
-            <TextField 
+            <TextField
               name='numberOfElectrodes'
               type='number'
               disabled={!this.props.settings.doMultiElectrodes}
@@ -140,17 +140,21 @@ export default class Run extends React.Component {
           />
         </div><br/>
         <br/>
-        <ImportData 
-          onImportRawData={this.props.onChange} 
-          buttonLabel={this.props.settings.rawDataFileName}/>
+        <ImportData
+          onImport={this.props.onImportRawData}
+          buttonLabel={this.props.buttonLabel}/>
         </CardText>
         <CardActions>
-          <RunAlgorithm onRunAlgorithm={this.props.onReceivedResults}/>
+          <RunAlgorithm
+            params={this.props.params}
+            settings={this.props.rawSignal}
+            rawSignal={this.props.rawSignal}
+            onRunAlgorithm={this.props.onReceivedResults}/>
         </CardActions>
       </Card>
-      
+
     return (
       content
-    );  
+    );
   }
 }

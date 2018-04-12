@@ -16,28 +16,31 @@ var style = {
   }
 };
 
-var layout = {
-  xaxis: {
-    showgrid: false, 
-    zeroline: false, 
-    showline:true,
-    mirror: true
-  },
-  yaxis: {
-    showgrid: false, 
-    zeroline: false, 
-    showline:true,
-    mirror: true}
-}
 
 export default class PlotClusters extends React.Component {
-  
+
   constructor(props) {
     super(props)
   };
-  
+
   render() {
-    
+    var layout = {
+      xaxis: {
+        title: 'Direction '+this.props.values.directions[0],
+        showgrid: false,
+        zeroline: false,
+        showline:true,
+        mirror: true
+      },
+      yaxis: {
+        title: 'Direction '+this.props.values.directions[1],
+        showgrid: false,
+        zeroline: false,
+        showline:true,
+        mirror: true}
+    }
+
+
     var data = [];
     for ( var i = 0 ; i < this.props.values.x.length ; i++ ) {
       var result = {
@@ -47,13 +50,13 @@ export default class PlotClusters extends React.Component {
         type: 'scatter',
         mode: 'markers',
         marker: style.marker,
-        
+
       };
       data.push(result);
     };
-    
-    
-    
+
+
+
     return (
       <Plot calssName='plot.clusters' data={data} layout={layout}/>
     );

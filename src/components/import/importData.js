@@ -25,49 +25,49 @@ export default class ImportData extends React.Component {
       open : false,
       message : 'Nothing Imported'
     };
-    
+
     this.handleRequestClose = this.handleRequestClose.bind(this);
     this.onFormSubmit = this.onFormSubmit.bind(this);
   }
-  
+
   handleRequestClose = () => {
     this.setState({open : false})
   };
-  
+
   onFormSubmit(event) {
     event.preventDefault();
     var fileName = event.target.files[0].name
-  
+
     fetch('http://localhost:8887/uploadData', {
       method: 'POST',
       body: event.target.files[0],
     }).then((response) => {
       if (response.status=="200"){
-        console.log(fileName, '1')
-        this.props.onImportRawData('rawDataFileName', fileName);
-        this.setState({
-          message : 'Import OK',
-        });
+        response.json().then((resp) => {
+          this.props.onImport(fileName, resp.x);
+          this.setState({
+            message : 'Import OK',
+            open: true
+          })
+        })
+      } else {
+          this.props.onImport('Error')
+          this.setState({message: 'Error'})
       }
-      else {
-        this.props.onImportData('Error')
-        this.setState({message: 'Error'})
-      }
-      this.setState({open : true})
     });
   };
 
   render() {
     return (
-      <RaisedButton 
+      <RaisedButton
         label={this.props.buttonLabel}
         labelPosition="before"
         style={styles.button}
         containerElement="label"
       >
-        <input 
-          type="file" 
-          onChange={this.onFormSubmit} 
+        <input
+          type="file"
+          onChange={this.onFormSubmit}
           style={styles.exampleImageInput}
         />
         <Snackbar

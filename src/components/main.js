@@ -6,6 +6,7 @@ import Run from './run/run'
 import PlotSpikes from './plots/plotSpikes';
 import PlotConfusion from './plots/plotConfusion';
 import PlotClusters from './plots/plotClusters';
+import PlotRawData from './plots/plotRawData';
 
 import Paper from 'material-ui/Paper';
 import {BottomNavigation, BottomNavigationItem} from 'material-ui/BottomNavigation';
@@ -16,6 +17,7 @@ import IconSpikes    from 'material-ui/svg-icons/editor/show-chart';
 import IconConfusion from 'material-ui/svg-icons/image/blur-off';
 import IconClusters  from 'material-ui/svg-icons/editor/bubble-chart';
 import IconContract  from 'material-ui/svg-icons/navigation/expand-less';
+import IconRaw from 'material-ui/svg-icons/action/timeline';
 
 const RunIcon = <IconRun/>;
 const ParamsIcon    = <IconParams/>;
@@ -23,6 +25,7 @@ const spikesIcon    = <IconSpikes />;
 const confusionIcon = <IconConfusion/>;
 const clusterIcon   = <IconClusters />;
 const expandIcon    = <IconContract />;
+const rawIcon = <IconRaw/>;
 
 import AppBar from 'material-ui/AppBar';
 import SvgIcon from 'material-ui/SvgIcon';
@@ -38,18 +41,17 @@ const Icon = (props) => (
 );
 
 export default class Main extends React.Component {
-  
+
   constructor(props) {
     super(props);
     this.state = {
-      selection: 5,
+      selection: 6,
       disablePlots : true,
       paramsFileName : 'import parameters',
       settings : {
-        rawDataFileName : 'import raw data',
         doBatches : true,
         batchTime : 30,
-        cores : 1, 
+        cores : 1,
         doConfusion : true,
         doClusters : true,
         doDownSampling : false,
@@ -79,15 +81,20 @@ export default class Main extends React.Component {
         initializations: '',
         alpha: '',
       },
+      rawSignal: {
+        'fileName': 'import raw data',
+        'x': ''
+      },
       results : {
         'spikes' : {
-          'x': [[]],
-          'y': [[]]
+          'y': [[]],
+          'labels': ''
         },
         'clusters': {
           'x': [[]],
           'y': [[]],
           'labels': [],
+          'directions': []
         },
         'confusion':{
           'x': [],
@@ -96,74 +103,99 @@ export default class Main extends React.Component {
         }
       },
     };
-    
+
     this.handleParamChange = this.handleParamChange.bind(this);
     this.handleParamWFuncChange = this.handleParamWFuncChange.bind(this);
     this.handleParamWModeChange = this.handleParamWModeChange.bind(this);
     this.handleParamWayChange = this.handleParamWayChange.bind(this);
     this.handleImportParams = this.handleImportParams.bind(this);
     this.handleReceivedResults = this.handleReceivedResults.bind(this);
-    this.handleImportRawDataFileName = this.handleImportRawDataFileName.bind(this);
     this.handleSettingsChange = this.handleSettingsChange.bind(this);
+    this.handleImportRawData = this.handleImportRawData.bind(this);
   };
-  
+
   handleParamChange = (name, value) => {
     this.setState(prevState => ({
       params: {...prevState.params, [name]: value}}
-    ))  
+    ))
   };
   handleParamWFuncChange = (value) => {
     this.setState(prevState => ({
       params: {...prevState.params, wFunc: value}}
-    ))  
+    ))
   };
   handleParamWModeChange = (value) => {
     this.setState(prevState => ({
       params: {...prevState.params, wMode: value}}
-    ))  
+    ))
   };
   handleParamWayChange = (value) => {
     this.setState(prevState => ({
       params: {...prevState.params, way: value}}
-    ))  
+    ))
   };
   handleImportParams = (values, fileName) => {
     this.setState({paramsFileName: fileName});
     this.setState({params: values});
   };
-  
+
   select = (index) => {this.setState({selection: index});};
   selectPlot = (index) => {
     if (!this.state.disablePlots) {
       this.setState({selection: index});
     };
   };
-  
+
   handleReceivedResults = (value) => {
     this.setState({results : value, disablePlots: false});
   };
-  
-  handleImportRawDataFileName = (value) => {
-    this.setState({rawDataFileName : value})
-  };
-  
+
   handleSettingsChange = (name, value) => {
     this.setState(prevState => ({
       settings: {...prevState.settings, [name]: value}}
-    ));    
+    ));
   };
-  
-  render () {   
+
+  handleImportRawData = (fileName, data) => {
+    this.setState({
+      rawSignal: {
+        fileName: fileName,
+        x: data
+      }
+    });
+  };
+
+  render () {
     if (this.state.selection==0){
-        var content = <PlotSpikes values={this.state.results.spikes}/>
+        var content = [];
+        for (var i=0;i<this.state.results.spikes.y.length;i++){
+          content.push(
+            <PlotSpikes
+              key={i}
+              values={this.state.results.spikes.y[i]}
+              title={this.state.results.spikes.labels[i]}
+            />
+          )
+        }
     } else if (this.state.selection == 1){
         var content = <PlotConfusion values={this.state.results.confusion}/>
     } else if (this.state.selection == 2) {
-        var content = <PlotClusters values={this.state.results.clusters}/>
+        var content = [];
+        for (var i=0;i<this.state.results.clusters.x.length;i++){
+          content.push(<PlotClusters
+            key={i}
+            values={{
+              'x':this.state.results.clusters.x[i],
+              'y':this.state.results.clusters.y[i],
+              'directions': this.state.results.clusters.directions[i],
+              'labels': this.state.results.clusters.labels,
+            }}
+          />)
+        }
     } else if (this.state.selection == 3) {
-        var content = 
-          <Params 
-            params={this.state.params} 
+        var content =
+          <Params
+            params={this.state.params}
             onParamChange={this.handleParamChange}
             onParamWFuncChange={this.handleParamWFuncChange}
             onParamWModeChange={this.handleParamWModeChange}
@@ -172,27 +204,37 @@ export default class Main extends React.Component {
             buttonLabel={this.state.paramsFileName}
           />
     } else if (this.state.selection == 4) {
-        var content = 
-            <Run 
-              onReceivedResults={this.handleReceivedResults}
-              settings={this.state.settings}
-              onChange={this.handleSettingsChange}/>
+        var content =
+          <Run
+            onReceivedResults={this.handleReceivedResults}
+            settings={this.state.settings}
+            buttonLabel={this.state.rawSignal.fileName}
+            onChange={this.handleSettingsChange}
+            onImportRawData={this.handleImportRawData}
+            params={this.state.params}
+            rawSignal={this.state.rawSignal}/>
+    } else if (this.state.selection == 5) {
+        var content =
+              <PlotRawData
+                values={this.state.rawSignal.x}
+                step={this.state.params.rate}
+              />
     } else {
         var content = <div/>
     }
-    
+
     return (
       <div>
         <AppBar
-          name='title_bar'  
+          name='title_bar'
           showMenuIconButton={true}
           iconElementLeft={<IconButton><Icon width='20px' height='20px' viewBox="0 0 512 512"/></IconButton>}
           iconStyleLeft={{marginLeft:5, fontSize:'50px', backgroundColor: '#2196F3', color:'#ffffff'}}
           style={{backgroundColor: '#2196F3'}}
           title='Spiky'/>
-        <AppBar 
+        <AppBar
           name='Subtitle'
-          showMenuIconButton={false} 
+          showMenuIconButton={false}
           style={{backgroundColor: '#00BCD4', height:25}}
         /><br/>
         <Paper zDepth={2}>
@@ -223,13 +265,18 @@ export default class Main extends React.Component {
               onClick={()=>this.select(4)}
             />
             <BottomNavigationItem
-              icon={expandIcon}
+              label="Raw Data"
+              icon={rawIcon}
               onClick={()=>this.select(5)}
+            />
+            <BottomNavigationItem
+              icon={expandIcon}
+              onClick={()=>this.select(6)}
             />
           </BottomNavigation>
           {content}
         </Paper>
       </div>
-    );  
+    );
   }
 }
